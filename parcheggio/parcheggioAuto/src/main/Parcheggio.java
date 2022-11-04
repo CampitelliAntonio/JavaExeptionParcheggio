@@ -10,26 +10,45 @@ public class Parcheggio {
     public void aggiungiMacchina(automobile auto, int posizione) throws Exception{
         if(parcheggioPieno()){
             throw new ParcheggioPienoExeption("Il parcheggio è pieno");
-        }
-        parcheggio[posizione] = auto;
-    }
-
-    public long rimuoviMacchina(String targa){
-        long secondi = 0;
-        int i;
-        for (i = 0; i < parcheggio.length; i++) {
-            if (parcheggio[i] != null) {
-                System.out.println("In posizione " + i + " veicolo " + parcheggio[i].getTarga() +
-                        " al timestamp " + parcheggio[i].getEntrata().getTime());
-                if (parcheggio[i].getTarga().equals(targa)) {
-                    parcheggio[i].setUscita(System.currentTimeMillis());
-                    secondi = (parcheggio[i].getUscita().getTime() - parcheggio[i].getEntrata().getTime()) / 1000;
-                    break;
-                }
+        }else{
+            if (macchinaEntrata(auto.getTarga())) {
+                throw new MacchinaPresenteNelParcheggioException("La targa scritta è gia presente nel parcheggio");
+            } else{
+                parcheggio[posizione] = auto;
             }
         }
-        parcheggio[i] = null;
+    }
+
+    public long rimuoviMacchina(String targa) throws Exception {
+        long secondi = 0;
+        int i;
+        if (parcheggioVuoto()) {
+            throw new ParcheggioVuotoException("Il parcheggio è vuoto");
+        }else{
+            for (i = 0; i < parcheggio.length; i++) {
+                if (parcheggio[i] != null) {
+                    if (parcheggio[i].getTarga().equals(targa)) {
+                        System.out.println("Il veicolo " + parcheggio[i].getTarga() + " al timestamp " + parcheggio[i].getEntrata().getTime());
+                        parcheggio[i].setUscita(System.currentTimeMillis());
+                        secondi = (parcheggio[i].getUscita().getTime() - parcheggio[i].getEntrata().getTime()) / 1000;
+                        break;
+                    } else {
+                        throw new MacchinaMaiEntrataException("La macchina con questa targa non è mai entrata");
+                    }
+                }
+            }
+            parcheggio[i] = null;
+        }
         return secondi;
+    }
+
+    private boolean parcheggioVuoto(){
+        for (int i = 0; i < parcheggio.length; i++) {
+            if(parcheggio[i] != null){
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean parcheggioPieno(){
@@ -39,5 +58,14 @@ public class Parcheggio {
             }
         }
         return true;
+    }
+
+    private boolean macchinaEntrata(String targa){
+        for (int i = 0; i < parcheggio.length; i++) {
+            if (parcheggio[i] != null && parcheggio[i].getTarga().equals(targa)){
+                return true;
+            }
+        }
+        return false;
     }
 }

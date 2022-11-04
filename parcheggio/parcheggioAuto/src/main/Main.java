@@ -19,13 +19,17 @@ public class Main {
                         par.aggiungiMacchina(new automobile(in.next(), System.currentTimeMillis()), posizione);
                         posizione ++;
                     } catch (Exception e) {
-                        System.out.println("Errore " + e.getMessage());
+                        System.out.println("Errore: " + e.getMessage());
                     }
                     break;
                 case "uscire":
-                    System.out.println("Scrivi la targa della macchina da far uscire");
-                    long secondi = par.rimuoviMacchina(in.next());
-                    System.out.println("Sono passati " + secondi + " dall'entrata nel parcheggio di questa macchina");
+                    try {
+                        System.out.println("Scrivi la targa della macchina da far uscire");
+                        long secondi = par.rimuoviMacchina(in.next());
+                        System.out.println("Sono passati " + secondi + " secondi dall'entrata nel parcheggio di questa macchina");
+                    } catch (Exception e) {
+                        System.out.println("Errore: " + e.getMessage());
+                    }
                     break;
                 default:
                     uscire = true;
