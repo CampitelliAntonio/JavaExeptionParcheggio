@@ -68,4 +68,14 @@ public class Parcheggio {
         }
         return false;
     }
+
+    public int macchineInParcheggio(){
+        int macchine = 0;
+        for (int i = 0; i < parcheggio.length; i++) {
+            if(parcheggio[i] != null){
+                macchine ++;
+            }
+        }
+        return macchine;
+    }
 }
